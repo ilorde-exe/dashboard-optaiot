@@ -53,7 +53,7 @@ const Navbar = (props) => {
             </li>
             <li>
               <a
-                onClick={props.upsHandler}
+                onClick={props.chillerHandler}
                 href="#"
                 className="flex items-center p-2  rounded-lg text-white hover:bg-gray-700 group"
               >
@@ -66,7 +66,7 @@ const Navbar = (props) => {
             </li>
             <li>
               <a
-                onClick={props.chillerHandler}
+                onClick={props.upsHandler}
                 href="#"
                 className="flex items-center p-2  rounded-lg text-white hover:bg-gray-700 group"
               >
