@@ -1,5 +1,6 @@
 import React from "react";
 import { LayoutPanelTop, Zap, ThermometerSnowflake } from "lucide-react";
+import logo from "../assets/logo.png";
 
 const Navbar = (props) => {
   return (
@@ -12,6 +13,9 @@ const Navbar = (props) => {
               <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-white">
                 Dashboard
               </span>
+            </div>
+            <div className="p-1 bg-white rounded-lg">
+              <img src={logo} alt="" className="h-8" />
             </div>
           </div>
         </div>

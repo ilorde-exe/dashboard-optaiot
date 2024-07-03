@@ -39,79 +39,50 @@ function App() {
     setUpsIsCollapsed(!newUpsIsCollapsed);
   };
   const chillers = [
-    { name: "Chiller 1", status: "running", lastUpdated: "Just now" },
+    { name: "Chiller 1", status: "running", lastUpdated: "10:30:45" },
     {
       name: "Chiller 2",
       status: "stopped",
-      lastUpdated: "2 minutes ago",
+      lastUpdated: "10:30:44",
     },
     {
       name: "Chiller 3",
       status: "error",
-      lastUpdated: "5 minutes ago",
+      lastUpdated: "10:30:47",
     },
-    {
-      name: "Chiller 4",
-      status: "error",
-      lastUpdated: "10 minutes ago",
-    },
-    {
-      name: "Chiller 5",
-      status: "running",
-      lastUpdated: "15 minutes ago",
-    },
-    {
-      name: "Chiller 6",
-      status: "error",
-      lastUpdated: "30 minutes ago",
-    },
+    { name: "Chiller 4", status: "running", lastUpdated: "10:30:48" },
   ];
   const upsSystems = [
-    { name: "UPS 1", status: "running", lastUpdated: "Just now" },
+    { name: "UPS 1", status: "running", lastUpdated: "10:30:48" },
     {
       name: "UPS 2",
       status: "stopped",
-      lastUpdated: "2 minutes ago",
+      lastUpdated: "10:30:45",
     },
     {
       name: "UPS 3",
       status: "error",
-      lastUpdated: "5 minutes ago",
+      lastUpdated: "10:30:49",
     },
     {
       name: "UPS 4",
       status: "error",
-      lastUpdated: "10 minutes ago",
+      lastUpdated: "10:30:49",
     },
     {
       name: "UPS 5",
       status: "running",
-      lastUpdated: "15 minutes ago",
+      lastUpdated: "10:30:41",
     },
     {
       name: "UPS 6",
       status: "running",
-      lastUpdated: "30 minutes ago",
+      lastUpdated: "10:30:40",
     },
     {
       name: "UPS 7",
       status: "stopped",
-      lastUpdated: "45 minutes ago",
-    },
-    {
-      name: "UPS 8",
-      status: "running",
-      lastUpdated: "2 hours ago",
-    },
-    {
-      name: "UPS 9",
-      status: "error",
-      lastUpdated: "2 days ago",
-    },
-    {
-      name: "UPS 10",
-      status: "stopped",
-      lastUpdated: "3 days ago",
+      lastUpdated: "10:30:45",
     },
   ];
   const totalChillers = chillers.length;
