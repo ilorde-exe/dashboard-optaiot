@@ -139,7 +139,7 @@ function App() {
                         {Object.entries(device.alarm_status).map(
                           ([key, value]) => (
                             <div className="px-3 py-2 text-gray-400" key={key}>
-                              {key}: {value}
+                              {key}:{value ? " true" : " false"}
                             </div>
                           )
                         )}
@@ -163,20 +163,20 @@ function App() {
           enter="transition-all ease-in-out duration-500 delay-[200ms]"
           enterFrom="opacity-0 translate-y-6"
           enterTo="opacity-100 translate-y-0"
-          leave="transition-all ease-in-out duration-300 "
+          leave="transition-all ease-in-out duration-300"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
           show={upsIsCollapsed}
         >
           <div className="mx-3 pl-1 grid grid-cols-4 gap-2">
             {upsIsCollapsed &&
-              upsSystems.map((device, index) => (
+              upsSystems.map((device) => (
                 <div
-                  key={device.name}
+                  key={device.id}
                   className={`bg-gray-900 rounded-lg shadow p-3 border ${
-                    device.status === "running"
+                    device.status_code === 1
                       ? "border-green-400"
-                      : device.status === "stopped"
+                      : device.status_code === 0
                       ? "border-gray-400"
                       : "border-red-400"
                   } `}
@@ -184,17 +184,17 @@ function App() {
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col">
                       <div className="text-lg font-medium text-gray-200">
-                        {device.name}
+                        {device.asset_name}
                       </div>
                       <div className="mt-2 text-xs text-gray-400">
-                        Updated: {device.lastUpdated}
+                        Updated: {device.last_update}
                       </div>
                     </div>
                     <div
                       className={`w-8 h-8 mr-2 rounded-xl ${
-                        device.status === "running"
+                        device.status_code === 1
                           ? "bg-green-600"
-                          : device.status === "stopped"
+                          : device.status_code === 0
                           ? "bg-gray-600"
                           : "bg-red-600"
                       }`}
@@ -203,18 +203,39 @@ function App() {
                   <div className="flex items-center justify-end">
                     <div
                       className={`text-sm font-semibold font-mono text-gray-400 ${
-                        device.status === "running"
+                        device.status_code === 1
                           ? "text-green-400"
-                          : device.status === "stopped"
+                          : device.status_code === 0
                           ? "text-gray-400"
                           : "px-1 text-red-400"
                       }`}
                     >
-                      {device.status}
+                      {device.status_code == 0
+                        ? "Stopped"
+                        : device.status_code == 1
+                        ? "Running"
+                        : "Error"}
                     </div>
                   </div>
-                  <div className="flex items-center justify-end mt-2 pr-3">
-                    <InfoIcon size={20} className="text-white" />
+                  <div className="flex items-center justify-end mt-2.5 pr-3 text-xs text-gray-400">
+                    <Popover>
+                      <PopoverButton className="text-white">
+                        <InfoIcon size={20} />
+                      </PopoverButton>
+                      <PopoverPanel
+                        transition
+                        anchor="bottom"
+                        className="mt-2 divide-y divide-white/5 rounded-xl bg-gray-700 text-sm/6 transition duration-200 ease-in-out [--anchor-gap:var(--spacing-5)] data-[closed]:-translate-y-1 data-[closed]:opacity-0"
+                      >
+                        {Object.entries(device.alarm_status).map(
+                          ([key, value]) => (
+                            <div className="px-3 py-2 text-gray-400" key={key}>
+                              {key}:{value ? " true" : " false"}
+                            </div>
+                          )
+                        )}
+                      </PopoverPanel>
+                    </Popover>
                   </div>
                 </div>
               ))}
