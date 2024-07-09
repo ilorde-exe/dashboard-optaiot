@@ -11,7 +11,7 @@ const Navbar = (props) => {
             <div className="flex items-center gap-2 justify-start rtl:justify-end">
               <LayoutPanelTop size={32} className="text-white" />
               <span className="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap text-white">
-                Dashboard
+                SYSTEM STATUS - Electra
               </span>
             </div>
             <div className="p-1 bg-white rounded-lg">
