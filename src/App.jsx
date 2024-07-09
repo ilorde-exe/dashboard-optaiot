@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
-import { LucideChevronsUpDown } from "lucide-react";
+import { LucideChevronsUpDown, InfoIcon } from "lucide-react";
 import "./index.css";
+import { Transition } from "@headlessui/react";
 
 function App() {
   const [chillerIsCollapsed, setChillerIsCollapsed] = useState(true);
@@ -104,65 +105,76 @@ function App() {
             onClick={handleChillerCollapseToggle}
           />
         </div>
-        <div className="px-2 pl-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {chillerIsCollapsed &&
-            chillers.map((device, index) => (
-              <div
-                key={device.name}
-                className={`bg-gray-900 rounded-lg shadow p-4 ${
-                  index % 3 === 0 &&
-                  index != 0 &&
-                  index != 3 &&
-                  index != 6 &&
-                  index != 9 &&
-                  index != 12 &&
-                  index != 15 &&
-                  index != 18 &&
-                  index != 21 &&
-                  index != 24 &&
-                  index != 27 &&
-                  index != 30
-                    ? "col-span-3"
-                    : ""
-                } border ${
-                  device.status === "running"
-                    ? "border-green-400"
-                    : device.status === "stopped"
-                    ? "border-gray-400"
-                    : "border-red-400"
-                } `}
-              >
-                <div className="flex items-center justify-between text-lg font-medium text-gray-200">
-                  {device.name}
-                  <div
-                    className={`w-8 h-8 mr-2 rounded-xl ${
-                      device.status === "running"
-                        ? "bg-green-600"
-                        : device.status === "stopped"
-                        ? "bg-gray-600"
-                        : "bg-red-600"
-                    }`}
-                  ></div>
-                </div>
-                <div className="flex items-center justify-end mt-2">
-                  <div
-                    className={`text-sm font-semibold font-mono text-gray-400 ${
-                      device.status === "running"
-                        ? "text-green-400"
-                        : device.status === "stopped"
-                        ? "text-gray-400"
-                        : "px-1 text-red-400"
-                    }`}
-                  >
-                    {device.status}
+        <Transition
+          enter="transition-all ease-in-out duration-500 delay-[200ms]"
+          enterFrom="opacity-0 translate-y-6"
+          enterTo="opacity-100 translate-y-0"
+          leave="transition-all ease-in-out duration-300"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          show={chillerIsCollapsed}
+        >
+          <div className="px-2 pl-1 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {chillerIsCollapsed &&
+              chillers.map((device, index) => (
+                <div
+                  key={device.name}
+                  className={`bg-gray-900 rounded-lg shadow p-4 ${
+                    index % 3 === 0 &&
+                    index != 0 &&
+                    index != 3 &&
+                    index != 6 &&
+                    index != 9 &&
+                    index != 12 &&
+                    index != 15 &&
+                    index != 18 &&
+                    index != 21 &&
+                    index != 24 &&
+                    index != 27 &&
+                    index != 30
+                      ? "col-span-3"
+                      : ""
+                  } border ${
+                    device.status === "running"
+                      ? "border-green-400"
+                      : device.status === "stopped"
+                      ? "border-gray-400"
+                      : "border-red-400"
+                  } `}
+                >
+                  <div className="flex items-center justify-between text-lg font-medium text-gray-200">
+                    {device.name}
+                    <div
+                      className={`w-8 h-8 mr-2 rounded-xl ${
+                        device.status === "running"
+                          ? "bg-green-600"
+                          : device.status === "stopped"
+                          ? "bg-gray-600"
+                          : "bg-red-600"
+                      }`}
+                    ></div>
+                  </div>
+                  <div className="flex items-center justify-end mt-2">
+                    <div
+                      className={`text-sm font-semibold font-mono text-gray-400 ${
+                        device.status === "running"
+                          ? "text-green-400"
+                          : device.status === "stopped"
+                          ? "text-gray-400"
+                          : "px-1 text-red-400"
+                      }`}
+                    >
+                      {device.status}
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between mt-6 pr-3 text-xs text-gray-400">
+                    <div>Last Updated: {device.lastUpdated}</div>
+                    <InfoIcon size={20} className="" />
                   </div>
                 </div>
-                <div className="mt-2 text-xs text-gray-400">
-                  Last updated {device.lastUpdated}
-                </div>
-              </div>
-            ))}
-        </div>
+              ))}
+          </div>
+        </Transition>
       </div>
 
       {/* UPS Systems */}
@@ -171,65 +183,75 @@ function App() {
           <h1 className="text-2xl font-semibold">UPS Systems</h1>
           <LucideChevronsUpDown size={24} onClick={handleUpsCollapseToggle} />
         </div>
-        <div className=" px-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {upsIsCollapsed &&
-            upsSystems.map((device, index) => (
-              <div
-                key={device.name}
-                className={`bg-gray-900 rounded-lg shadow p-4 ${
-                  index % 3 === 0 &&
-                  index != 0 &&
-                  index != 3 &&
-                  index != 6 &&
-                  index != 9 &&
-                  index != 12 &&
-                  index != 15 &&
-                  index != 18 &&
-                  index != 21 &&
-                  index != 24 &&
-                  index != 27 &&
-                  index != 30
-                    ? "col-span-3"
-                    : ""
-                } border ${
-                  device.status === "running"
-                    ? "border-green-400"
-                    : device.status === "stopped"
-                    ? "border-gray-400"
-                    : "border-red-400"
-                }`}
-              >
-                <div className="flex items-center justify-between text-lg font-medium text-gray-200">
-                  {device.name}
-                  <div
-                    className={`w-8 h-8 mr-2 rounded-xl ${
-                      device.status === "running"
-                        ? "bg-green-600"
-                        : device.status === "stopped"
-                        ? "bg-gray-600"
-                        : "bg-red-600"
-                    }`}
-                  ></div>
-                </div>
-                <div className="flex items-center justify-end mt-2">
-                  <div
-                    className={`text-sm font-semibold font-mono text-gray-400 ${
-                      device.status === "running"
-                        ? "text-green-400"
-                        : device.status === "stopped"
-                        ? "text-gray-400"
-                        : "px-1 text-red-400"
-                    }`}
-                  >
-                    {device.status}
+        <Transition
+          enter="transition-all ease-in-out duration-500 delay-[200ms]"
+          enterFrom="opacity-0 translate-y-6"
+          enterTo="opacity-100 translate-y-0"
+          leave="transition-all ease-in-out duration-300"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          show={upsIsCollapsed}
+        >
+          <div className=" px-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {upsIsCollapsed &&
+              upsSystems.map((device, index) => (
+                <div
+                  key={device.name}
+                  className={`bg-gray-900 rounded-lg shadow p-4 ${
+                    index % 3 === 0 &&
+                    index != 0 &&
+                    index != 3 &&
+                    index != 6 &&
+                    index != 9 &&
+                    index != 12 &&
+                    index != 15 &&
+                    index != 18 &&
+                    index != 21 &&
+                    index != 24 &&
+                    index != 27 &&
+                    index != 30
+                      ? "col-span-3"
+                      : ""
+                  } border ${
+                    device.status === "running"
+                      ? "border-green-400"
+                      : device.status === "stopped"
+                      ? "border-gray-400"
+                      : "border-red-400"
+                  }`}
+                >
+                  <div className="flex items-center justify-between text-lg font-medium text-gray-200">
+                    {device.name}
+                    <div
+                      className={`w-8 h-8 mr-2 rounded-xl ${
+                        device.status === "running"
+                          ? "bg-green-600"
+                          : device.status === "stopped"
+                          ? "bg-gray-600"
+                          : "bg-red-600"
+                      }`}
+                    ></div>
+                  </div>
+                  <div className="flex items-center justify-end mt-2">
+                    <div
+                      className={`text-sm font-semibold font-mono text-gray-400 ${
+                        device.status === "running"
+                          ? "text-green-400"
+                          : device.status === "stopped"
+                          ? "text-gray-400"
+                          : "px-1 text-red-400"
+                      }`}
+                    >
+                      {device.status}
+                    </div>
+                  </div>
+                  <div className="mt-2 text-xs text-gray-400">
+                    Last updated {device.lastUpdated}
                   </div>
                 </div>
-                <div className="mt-2 text-xs text-gray-400">
-                  Last updated {device.lastUpdated}
-                </div>
-              </div>
-            ))}
-        </div>
+              ))}
+          </div>
+        </Transition>
       </div>
     </div>
   );

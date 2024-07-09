@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.height-0-important {
+  height: 0 !important; /* to win the inline style we set */
+}

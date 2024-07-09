@@ -5,7 +5,7 @@ import logo from "../assets/logo.png";
 const Navbar = (props) => {
   return (
     <>
-      <nav className="fixed top-0 z-50 w-full border-b bg-gray-800 border-gray-700">
+      <nav className="fixed top-0 z-50 w-full border-b bg-gray-900 border-gray-900">
         <div className="px-3 py-3 lg:px-5 lg:pl-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 justify-start rtl:justify-end">
