@@ -79,11 +79,10 @@ const Navbar = (props) => {
               >
                 <Zap className="w-5 h-5  transition duration-75 text-gray-400 group-hover:text-white" />
                 <span className="flex-1 ms-3 whitespace-nowrap">
-                  UPS Systems ({props.allData[3]})
+                  UPS Systems ({props.allData[1]})
                 </span>
                 <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium   rounded-full bg-red-900/75 text-white">
                   <span>{props.allData[3]}</span>
-                  <CircleAlert />
                 </span>
               </a>
             </li>
