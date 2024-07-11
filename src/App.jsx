@@ -176,10 +176,7 @@ function App() {
         <div className="flex items-center justify-between px-5 py-3 lg:px-10 lg:pl-5">
           <h1 className="text-2xl font-semibold">UPS Systems</h1>
           <button className="shadow-[0_0_0_3px_#000000_inset] px-2.5 py-2 bg-gray-900 border border-gray-900 dark:border-white dark:text-white text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
-            <LucideChevronsUpDown
-              size={24}
-              onClick={handleChillerCollapseToggle}
-            />
+            <LucideChevronsUpDown size={24} onClick={handleUpsCollapseToggle} />
           </button>
         </div>
         <Transition
