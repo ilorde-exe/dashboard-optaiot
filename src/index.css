@@ -5,3 +5,21 @@
 .height-0-important {
   height: 0 !important; /* to win the inline style we set */
 }
+
+:where(textarea),
+:where(
+    input[type="text"],
+    input[type="search"],
+    input[type="password"],
+    input[type="url"]
+  ) {
+  appearance: none;
+  border-style: solid;
+  outline: none;
+}
+:focus {
+  outline: none;
+}
+::-moz-focus-inner {
+  border: 0;
+}
