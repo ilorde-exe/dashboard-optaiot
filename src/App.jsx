@@ -73,7 +73,7 @@ function App() {
       <div className="pt-16 pl-64 text-white">
         <div className="flex items-center justify-between px-5 py-3 lg:px-10 lg:pl-5">
           <h1 className="text-2xl font-semibold">Chillers</h1>
-          <button className="shadow-[0_0_0_3px_#000000_inset] px-2.5 py-2 bg-gray-900 border border-gray-900  text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
+          <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-white text-white rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
             <LucideChevronsUpDown
               size={24}
               onClick={handleChillerCollapseToggle}
@@ -141,7 +141,7 @@ function App() {
                   <div className="flex items-center text-xs text-gray-400">
                     <Popover>
                       <PopoverButton className="">
-                        <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-black text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
+                        <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-white text-white rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
                           Details
                         </button>
                       </PopoverButton>
@@ -181,7 +181,7 @@ function App() {
       <div className=" pl-64 text-white">
         <div className="flex items-center justify-between px-5 py-3 lg:px-10 lg:pl-5">
           <h1 className="text-2xl font-semibold">UPS Systems</h1>
-          <button className="shadow-[0_0_0_3px_#000000_inset] px-2.5 py-2 bg-gray-900 border border-gray-900  text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
+          <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-white text-white rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
             <LucideChevronsUpDown size={24} onClick={handleUpsCollapseToggle} />
           </button>
         </div>
@@ -209,7 +209,7 @@ function App() {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col">
-                      <div className="text-lg font-medium text-gray-200">
+                      <div className="text-lg font-normal text-gray-200">
                         {device.asset_name}
                       </div>
                       <div className="mt-2 text-xs text-gray-400">
@@ -246,7 +246,7 @@ function App() {
                   <div className="flex items-center text-xs text-gray-400">
                     <Popover>
                       <PopoverButton className="">
-                        <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-black  text-black rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
+                        <button className="shadow-[0_0_0_3px_#000000_inset] px-6 py-2 bg-transparent border border-white text-white rounded-lg font-bold transform hover:-translate-y-1 transition duration-400">
                           Details
                         </button>
                       </PopoverButton>
