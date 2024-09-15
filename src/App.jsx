@@ -10,34 +10,58 @@ import {
 } from "@headlessui/react";
 import { chillers, upsSystems } from "./data";
 
-function App() {
+export default function App() {
   const [chillerIsCollapsed, setChillerIsCollapsed] = useState(true);
   const [upsIsCollapsed, setUpsIsCollapsed] = useState(true);
+  const [events, setEvents] = useState([]);
   const [data, setData] = useState(null);
-
+  const [error, setError] = useState(null);
   useEffect(() => {
-    fetch(
-      "https://uuhkltdgazctpotmtxom.supabase.co/rest/v1/internal1?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV1aGtsdGRnYXpjdHBvdG10eG9tIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTY4OTIyMjksImV4cCI6MjAzMjQ2ODIyOX0.btb5VSLKX--4XJgpT9s3hU2n67W5OW7GJKB-BVTWcOU"
-    )
-      .then((response) => {
-        // Log the raw response data
-        console.log("Raw Response Data:", response);
-        return response.json();
-      })
-      .then((data) => {
-        // Log the parsed JSON data
-        console.log("Parsed JSON Data:", data);
-        setData(data);
-      })
-      .catch((error) => console.log(error));
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch(
+          "https://4cff-49-206-4-122.ngrok-free.app/events",
+          {
+            headers: {
+              "ngrok-skip-browser-warning": "true",
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.text();
+        const newEvents = data
+          .split("\n")
+          .filter((line) => line.trim() !== "")
+          .map((line) => {
+            try {
+              return JSON.parse(line.replace(/^data: /, ""));
+            } catch (e) {
+              console.error("Failed to parse event:", line, e);
+              return null;
+            }
+          })
+          .filter((event) => event !== null);
 
-    console.log(data);
+        setEvents((prevEvents) => [...prevEvents, ...newEvents]);
+      } catch (e) {
+        console.error("Fetch error:", e);
+        setError(e.message);
+      }
+    };
+
+    fetchEvents();
+    const intervalId = setInterval(fetchEvents, 5000); // Fetch every 5 seconds
+
+    return () => clearInterval(intervalId);
   }, []);
+
   const initAudio = () => {
     let targetAudio = document.getElementsByClassName("audioBtn")[0];
     targetAudio.play();
   };
-
   const handleChillerCollapseToggle = () => {
     setChillerIsCollapsed(!chillerIsCollapsed);
   };
@@ -214,6 +238,11 @@ function App() {
                       </div>
                       <div className="mt-2 text-xs text-gray-400">
                         Updated: {device.last_update}
+                        {events.map((event, index) => (
+                          <li key={index} className="mb-2">
+                            {JSON.stringify(event)}
+                          </li>
+                        ))}
                       </div>
                     </div>
                     <div
@@ -287,5 +316,3 @@ function App() {
     </div>
   );
 }
-
-export default App;
