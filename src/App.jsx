@@ -16,7 +16,8 @@ import { chillers, upsSystems } from "./data";
 
 export default function App() {
   const [chillerIsCollapsed, setChillerIsCollapsed] = useState(true);
-  const [upsIsCollapsed, setUpsIsCollapsed] = useState(true);
+  // Change this to true when the UPS api is ready
+  const [upsIsCollapsed, setUpsIsCollapsed] = useState(false);
   const [latestChillerData, setLatestChillerData] = useState(null);
   const [error, setError] = useState(null);
   const [notifications, setNotifications] = useState([]);
@@ -59,8 +60,8 @@ export default function App() {
     previousDataRef.current = newData;
   }
 
-  const handleShowNotification = () => {
-    showNotification("This is a test notification!");
+  const handleShowNotification = (message) => {
+    showNotification(message);
   };
 
   useEffect(() => {
