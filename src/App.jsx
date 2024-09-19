@@ -1,5 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./components/Navbar";
+import Loader from "./components/Loader";
+import ErrorPage from "./components/ErrorPage";
 import { LucideChevronsUpDown } from "lucide-react";
 import "./index.css";
 import {
@@ -13,55 +17,104 @@ import { chillers, upsSystems } from "./data";
 export default function App() {
   const [chillerIsCollapsed, setChillerIsCollapsed] = useState(true);
   const [upsIsCollapsed, setUpsIsCollapsed] = useState(true);
-  const [events, setEvents] = useState([]);
-  const [data, setData] = useState(null);
+  const [latestChillerData, setLatestChillerData] = useState(null);
   const [error, setError] = useState(null);
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await fetch(
-          "https://4cff-49-206-4-122.ngrok-free.app/events",
-          {
-            headers: {
-              "ngrok-skip-browser-warning": "true",
-              "Content-Type": "application/json",
-            },
+  const [notifications, setNotifications] = useState([]);
+  const previousDataRef = useRef(null);
+
+  function showNotification(message) {
+    toast.info(message, {
+      autoClose: 6000,
+      position: "bottom-right",
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      theme: "dark",
+      draggable: true,
+    });
+  }
+  function checkForAlarmChanges(newData) {
+    if (!previousDataRef.current) {
+      previousDataRef.current = newData;
+      return;
+    }
+
+    newData.forEach((newEntity, index) => {
+      const prevEntity = previousDataRef.current[index];
+      if (prevEntity) {
+        Object.entries(newEntity.alarm_status).forEach(
+          ([alarmKey, alarmValue]) => {
+            if (alarmValue !== prevEntity.alarm_status[alarmKey]) {
+              const status =
+                alarmValue === "1.000000" ? "activated" : "deactivated";
+              handleShowNotification(
+                `${newEntity.entity_name}: ${alarmKey} ${status}`
+              );
+            }
           }
         );
+      }
+    });
+
+    previousDataRef.current = newData;
+  }
+
+  const handleShowNotification = () => {
+    showNotification("This is a test notification!");
+  };
+
+  useEffect(() => {
+    const fetchChillerData = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/events", {
+          headers: {
+            "Content-Type": "text/event-stream",
+            "Cache-Control": "no-cache",
+            Connection: "keep-alive",
+          },
+        });
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        const data = await response.text();
-        const newEvents = data
-          .split("\n")
-          .filter((line) => line.trim() !== "")
-          .map((line) => {
-            try {
-              return JSON.parse(line.replace(/^data: /, ""));
-            } catch (e) {
-              console.error("Failed to parse event:", line, e);
-              return null;
-            }
-          })
-          .filter((event) => event !== null);
 
-        setEvents((prevEvents) => [...prevEvents, ...newEvents]);
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          const decodedChunk = decoder.decode(value, { stream: true });
+          console.log("Received chunk:", decodedChunk);
+
+          try {
+            const data = JSON.parse(decodedChunk);
+            if (data && data.entity_data_mapping) {
+              setLatestChillerData(data.entity_data_mapping);
+              checkForAlarmChanges(data.entity_data_mapping);
+            }
+          } catch (parseError) {
+            console.error("Error parsing chiller data:", parseError);
+          }
+        }
       } catch (e) {
-        console.error("Fetch error:", e);
         setError(e.message);
+        console.error("Error fetching chiller data:", e);
       }
     };
 
-    fetchEvents();
-    const intervalId = setInterval(fetchEvents, 5000); // Fetch every 5 seconds
-
-    return () => clearInterval(intervalId);
+    fetchChillerData();
   }, []);
+
+  if (error) return <ErrorPage error={error} />;
+  if (!latestChillerData) return <Loader />;
 
   const initAudio = () => {
     let targetAudio = document.getElementsByClassName("audioBtn")[0];
     targetAudio.play();
   };
+
   const handleChillerCollapseToggle = () => {
     setChillerIsCollapsed(!chillerIsCollapsed);
   };
@@ -88,6 +141,7 @@ export default function App() {
   const allData = [totalChillers, totalUPS, chillersWithErrors, upsWithErrors];
   return (
     <div className="pb-16 min-h-screen bg-gray-800 -z-10">
+      <ToastContainer />
       <Navbar
         allData={allData}
         chillerHandler={handleChillerCollapseToggle}
@@ -115,31 +169,31 @@ export default function App() {
         >
           <div className="mx-3 pl-1 grid grid-cols-4 gap-2">
             {chillerIsCollapsed &&
-              chillers.map((device) => (
+              latestChillerData.map((device) => (
                 <div
-                  key={device.id}
+                  key={device.entity_id}
                   className={`bg-gray-900 rounded-lg shadow p-3 border ${
-                    device.status_code === 1
+                    device.Run_Status === "1.000000"
                       ? "border-green-400"
-                      : device.status_code === 0
+                      : device.Run_Status === "0.000000"
                       ? "border-gray-400"
                       : "border-red-400"
-                  } `}
+                  }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex flex-col">
                       <div className="text-lg font-medium text-gray-200">
-                        {device.asset_name}
+                        {device.entity_name}
                       </div>
                       <div className="mt-2 text-xs text-gray-400">
-                        Updated: {device.last_update}
+                        Updated: {device.LastUpdated}
                       </div>
                     </div>
                     <div
                       className={`w-8 h-8 mr-2 rounded-xl ${
-                        device.status_code === 1
+                        device.Run_Status === "1.000000"
                           ? "bg-green-600"
-                          : device.status_code === 0
+                          : device.Run_Status === "0.000000"
                           ? "bg-gray-600"
                           : "bg-red-600"
                       }`}
@@ -148,16 +202,16 @@ export default function App() {
                   <div className="flex items-center justify-end">
                     <div
                       className={`text-sm font-semibold font-mono text-gray-400 ${
-                        device.status_code === 1
+                        device.Run_Status === "1.000000"
                           ? "text-green-400"
-                          : device.status_code === 0
+                          : device.Run_Status === "0.000000"
                           ? "text-gray-400"
                           : "px-1 text-red-400"
                       }`}
                     >
-                      {device.status_code == 0
+                      {device.Run_Status === "0.000000"
                         ? "Stopped"
-                        : device.status_code == 1
+                        : device.Run_Status === "1.000000"
                         ? "Running"
                         : "Error"}
                     </div>
@@ -178,8 +232,8 @@ export default function App() {
                           {Object.entries(device.alarm_status).map(
                             ([key, value]) => (
                               <div
-                                className="text-sm block rounded-lg py-2 px-3 transition hover:bg-white/5"
                                 key={key}
+                                className="text-sm block rounded-lg py-2 px-3 transition hover:bg-white/5"
                               >
                                 <div className="flex items-center justify-between">
                                   <p className="flex justify-between pr-4 font-semibold text-white font-mono">
@@ -238,11 +292,6 @@ export default function App() {
                       </div>
                       <div className="mt-2 text-xs text-gray-400">
                         Updated: {device.last_update}
-                        {events.map((event, index) => (
-                          <li key={index} className="mb-2">
-                            {JSON.stringify(event)}
-                          </li>
-                        ))}
                       </div>
                     </div>
                     <div
