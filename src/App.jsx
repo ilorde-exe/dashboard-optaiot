@@ -35,25 +35,39 @@ export default function App() {
     });
   }
   function checkForAlarmChanges(newData) {
-    if (!previousDataRef.current) {
+    if (!previousDataRef.current || !Array.isArray(newData)) {
       previousDataRef.current = newData;
       return;
     }
 
     newData.forEach((newEntity, index) => {
       const prevEntity = previousDataRef.current[index];
-      if (prevEntity) {
-        Object.entries(newEntity.alarm_status).forEach(
-          ([alarmKey, alarmValue]) => {
-            if (alarmValue !== prevEntity.alarm_status[alarmKey]) {
-              const status =
-                alarmValue === "1.000000" ? "activated" : "deactivated";
-              handleShowNotification(
-                `${newEntity.entity_name}: ${alarmKey} ${status}`
-              );
+      if (prevEntity && newEntity && typeof newEntity === "object") {
+        if (
+          newEntity.alarm_status &&
+          typeof newEntity.alarm_status === "object"
+        ) {
+          Object.entries(newEntity.alarm_status).forEach(
+            ([alarmKey, alarmValue]) => {
+              if (
+                prevEntity.alarm_status &&
+                alarmValue !== prevEntity.alarm_status[alarmKey]
+              ) {
+                const status =
+                  alarmValue === "1.000000" ? "activated" : "deactivated";
+                showNotification(
+                  `${newEntity.entity_name}: ${alarmKey} ${status}`
+                );
+              }
             }
-          }
-        );
+          );
+        } else {
+          console.warn(
+            `alarm_status is missing or not an object for entity: ${
+              newEntity.entity_name || "Unknown"
+            }`
+          );
+        }
       }
     });
 
