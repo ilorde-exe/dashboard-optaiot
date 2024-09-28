@@ -243,21 +243,28 @@ export default function App() {
                         anchor="bottom"
                         className="mt-2 divide-y divide-white/5 rounded-xl bg-gray-700 text-sm/6 transition duration-200 ease-in-out [--anchor-gap:var(--spacing-5)] data-[closed]:-translate-y-1 data-[closed]:opacity-0"
                       >
-                        <div className="px-3 py-2">
-                          {Object.entries(device.alarm_status).map(
-                            ([key, value]) => (
-                              <div
-                                key={key}
-                                className="text-sm block rounded-lg py-2 px-3 transition hover:bg-white/5"
-                              >
-                                <div className="flex items-center justify-between">
-                                  <p className="flex justify-between pr-4 font-semibold text-white font-mono">
-                                    {key}
-                                  </p>
-                                  <p className="text-gray-400">{`${value}`}</p>
+                        <div key={device.id} className="px-3 py-2">
+                          {device.alarm_status &&
+                          typeof device.alarm_status === "object" ? (
+                            Object.entries(device.alarm_status).map(
+                              ([key, value]) => (
+                                <div
+                                  key={key}
+                                  className="text-sm block rounded-lg py-2 px-3 transition hover:bg-white/5"
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <p className="flex justify-between pr-4 font-semibold text-white font-mono">
+                                      {key}
+                                    </p>
+                                    <p className="text-gray-400">{`${value}`}</p>
+                                  </div>
                                 </div>
-                              </div>
+                              )
                             )
+                          ) : (
+                            <p className="text-gray-400">
+                              No alarm status available
+                            </p>
                           )}
                         </div>
                       </PopoverPanel>
